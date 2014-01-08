@@ -64,14 +64,15 @@ class Season(BaseResource, Base):
 
     season_id = Column(Integer, primary_key=True)
     name = Column(Unicode, nullable=False)
-    year = Column(Integer, nullable=False)
+    year = Column(Integer)
 
     show_id = Column(Integer, ForeignKey(Show.show_id), index=True)
     show = relationship(Show, backref=backref('seasons', uselist=True))
 
-    def __init__(self, name, year):
+    def __init__(self, name, year=None):
         self.name = name
-        self.year = year
+        if year:
+            self.year = year
 
 
 class Episode(BaseResource, Base):
