@@ -28,7 +28,7 @@ from ..models import DBSession as db
 class EpisodesModel(BaseCollectionViewModel):
     model_name = 'episodes'
     id_fields = {
-        'id': ('api_episodes', ),
+        'id': ('api_episodes', ('show_id', 'season_id', )),
     }
 
 
@@ -37,10 +37,10 @@ class EpisodeModel(BaseViewModel):
     model_name = 'episode'
     dbmodelCls = Episode
 
-    fields = ('episode_id', 'name', 'year', 'watched', 'watched_date', )
+    fields = ('episode_id', 'name', 'watched', 'watched_date', 'number',
+        'path', 'sha', 'season_id', )
     id_fields = {
-        'id': ('api_episode', 'episode_id', ),
-        'episodes': ('api_episodes', 'show_id', 'episode_id', ),
+        'id': ('api_episode', ('show_id', 'season_id', 'episode_id', ), ),
     }
 
 
@@ -50,7 +50,10 @@ class EpisodesView(APIView):
     @view_provides('episodes')
     def _get(self):
         return db.query(Episode).filter_by(
-            season_id=self.match.season_id).order_by(Episode.number).all(), {}
+            season_id=self.match.season_id).order_by(Episode.number).all(), {
+                'show_id': self.match.show_id,
+                'season_id': self.match.season_id,
+            }
 
     @view_requires('episode')
     @view_provides('episode')
@@ -59,8 +62,9 @@ class EpisodesView(APIView):
             self.request.input_model.number,
             self.request.input_model.path,
             name=self.request.input_model.name,
-            sha=self.request.input_mode.sha
+            sha=self.request.input_model.sha
         )
+        episode.season_id = self.match.season_id
         db.add(episode)
         db.flush()
         return episode
@@ -71,7 +75,9 @@ class EpisodesView(APIView):
 class EpisodeView(APIView):
     @view_provides('episode')
     def _get(self):
-        return Episode.get_by_id(self.match.episode_id)
+        episode = Episode.get_by_id(self.match.episode_id)
+        episode.show_id = self.match.show_id
+        return episode
 
     @view_requires('episode')
     @view_provides('episode')

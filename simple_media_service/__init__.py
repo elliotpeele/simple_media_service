@@ -33,7 +33,7 @@ def main(global_config, **settings):
     config.add_route('api_shows',       '/api/library/shows')
     config.add_route('api_show',        '/api/library/shows/{show_id}')
     config.add_route('api_seasons',     '/api/library/shows/{show_id}/seasons')
-    config.add_route('api_season',      '/api/library/shows/{show_id}/seasons/{seasons_id}')
+    config.add_route('api_season',      '/api/library/shows/{show_id}/seasons/{season_id}')
     config.add_route('api_episodes',    '/api/library/shows/{show_id}/seasons/{season_id}/episodes')
     config.add_route('api_episode',     '/api/library/shows/{show_id}/seasons/{season_id}/episodes/{episode_id}')
 

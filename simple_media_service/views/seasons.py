@@ -28,7 +28,7 @@ from ..models import DBSession as db
 class SeasonsModel(BaseCollectionViewModel):
     model_name = 'seasons'
     id_fields = {
-        'id': ('api_seasons', ),
+        'id': ('api_seasons', 'show_id', ),
     }
 
 
@@ -39,8 +39,8 @@ class SeasonModel(BaseViewModel):
 
     fields = ('season_id', 'name', 'year', )
     id_fields = {
-        'id': ('api_season', 'season_id', ),
-        'episodes': ('api_episodes', 'show_id', 'season_id', ),
+        'id': ('api_season', ('show_id', 'season_id', ), ),
+        'episodes': ('api_episodes', ('show_id', 'season_id', ), ),
     }
 
 
@@ -59,6 +59,7 @@ class SeasonsView(APIView):
             self.request.input_model.name,
             self.request.input_model.year,
         )
+        season.show_id = self.match.show_id
         db.add(season)
         db.flush()
         return season
