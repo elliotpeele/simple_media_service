@@ -39,4 +39,4 @@ nosetests.xml
 *.swp
 
 # sqlite db
-*.sqlite
+*.sqlite*
