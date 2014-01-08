@@ -49,8 +49,7 @@ class ShowModel(BaseViewModel):
 class ShowsView(APIView):
     @view_provides('shows')
     def _get(self):
-        # FIXME: order by name
-        return [ x for x in Show.get_all() ], {}
+        return db.query(Show).order_by(Show.name).all(), {}
 
     @view_requires('show')
     @view_provides('show')

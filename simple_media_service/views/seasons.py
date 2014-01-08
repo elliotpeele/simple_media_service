@@ -49,8 +49,8 @@ class SeasonModel(BaseViewModel):
 class SeasonsView(APIView):
     @view_provides('seasons')
     def _get(self):
-        # FIXME: order by name
-        return [ x for x in Season.get_all() ], {}
+        return db.query(Season).filter_by(show_id=self.match.show_id).order_by(
+            Season.name).all(), {}
 
     @view_requires('season')
     @view_provides('season')

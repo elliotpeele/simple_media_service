@@ -49,8 +49,8 @@ class EpisodeModel(BaseViewModel):
 class EpisodesView(APIView):
     @view_provides('episodes')
     def _get(self):
-        # FIXME: order by number
-        return [ x for x in Episode.get_all() ], {}
+        return db.query(Episode).filter_by(
+            season_id=self.match.season_id).order_by(Episode.number).all(), {}
 
     @view_requires('episode')
     @view_provides('episode')
