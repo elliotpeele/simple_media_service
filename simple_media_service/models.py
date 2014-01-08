@@ -14,7 +14,6 @@ from datetime import datetime
 
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
-from sqlalchemy import UniqueConstraint
 
 from sqlalchemy import String
 from sqlalchemy import Integer
@@ -84,6 +83,8 @@ class Episode(BaseResource, Base):
     path = Column(String, nullable=False)
     sha = Column(String(64))
 
+    watched_date = Column(DateTime)
+
     season_id = Column(Integer, ForeignKey(Season.season_id), index=True)
     season = relationship(Season, backref=backref('seasons', uselist=True))
 
@@ -94,6 +95,17 @@ class Episode(BaseResource, Base):
             self.name = name
         if sha:
             self.sha = sha
+
+    def _get_watched(self):
+        return bool(self.watched_date)
+
+    def _set_watched(self, val):
+        if val:
+            self.watched_date = datetime.utcnow
+        else:
+            self.watched_date = None
+
+    watched = property(_get_watched, _set_watched)
 
 
 class Device(BaseResource, Base):

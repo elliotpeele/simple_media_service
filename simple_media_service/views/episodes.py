@@ -37,7 +37,7 @@ class EpisodeModel(BaseViewModel):
     model_name = 'episode'
     dbmodelCls = Episode
 
-    fields = ('episode_id', 'name', 'year', )
+    fields = ('episode_id', 'name', 'year', 'watched', 'watched_date', )
     id_fields = {
         'id': ('api_episode', 'episode_id', ),
         'episodes': ('api_episodes', 'show_id', 'episode_id', ),
@@ -80,10 +80,12 @@ class EpisodeView(APIView):
         number = self.request.input_model.number
         path = self.request.input_model.path
         sha = self.request.input_model.sha
+        watched = self.request.input_model.watched
         episode = Episode.get_by_id(self.match.episode_id)
         episode.name = name
         episode.number = number
         episode.path = path
         episode.sha = sha
+        episode.watched = watched
         db.flush()
         return episode
