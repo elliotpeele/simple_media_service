@@ -40,6 +40,7 @@ class SeasonModel(BaseViewModel):
     fields = ('season_id', 'name', 'year', )
     id_fields = {
         'id': ('api_season', ('show_id', 'season_id', ), ),
+        'show': ('api_show', ('show_id', ), ),
         'episodes': ('api_episodes', ('show_id', 'season_id', ), ),
     }
 

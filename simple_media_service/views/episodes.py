@@ -41,6 +41,7 @@ class EpisodeModel(BaseViewModel):
         'path', 'sha', 'season_id', )
     id_fields = {
         'id': ('api_episode', ('show_id', 'season_id', 'episode_id', ), ),
+        'season': ('api_season', ('show_id', 'season_id', ), ),
     }
 
 
