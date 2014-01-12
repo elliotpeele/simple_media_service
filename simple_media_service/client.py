@@ -27,7 +27,7 @@ class SMSClient(object):
 
     def __init__(self, uri):
         self.api = prism_rest_client.open(uri)
-        self.shows = dict((x.name, x) for x in self.api.library.shows)
+        self.shows = dict((x.name.lower(), x) for x in self.api.library.shows)
 
     def addfile(self, path):
         m = self.FILE_RE.match(os.path.basename(path))
@@ -40,23 +40,24 @@ class SMSClient(object):
             log.warn('didn\'t find season and episode: %s', path)
             return
 
-        showsName = groups[0]
+        showName = groups[0]
         seasonNum, episodeNum = groups[2], groups[3]
         if not seasonNum and not episodeNum:
             seasonNum, episodeNum = groups[4], groups[5]
 
-        if showsName in self.shows:
-            shows = self.shows.get(showsName)
+        if showName.lower() in self.shows:
+            show = self.shows.get(showName.lower())
         else:
-            shows = self.api.library.shows.append({
-                'name': showsName,
+            show = self.api.library.shows.append({
+                'name': showName,
             })
+            self.shows[showName.lower()] = show
 
-        seasons = dict((int(x.name), x) for x in shows.seasons)
+        seasons = dict((int(x.name), x) for x in show.seasons)
         if int(seasonNum) in seasons:
             season = seasons.get(int(seasonNum))
         else:
-            season = shows.seasons.append({
+            season = show.seasons.append({
                 'name': str(int(seasonNum)),
             })
 
@@ -70,7 +71,7 @@ class SMSClient(object):
                 'sha': self._calcSHA256(path),
             })
 
-        log.info('episode added: %s', path)
+            log.info('episode added: %s', path)
 
         return episode
 

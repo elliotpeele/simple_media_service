@@ -41,7 +41,5 @@ def main(argv=sys.argv):
     for episode in client.addtree(file_path):
         if not episode:
             continue
-        log.info('added episide %s - Season %s - Episode %s',
+        log.info('indexed %s - Season %s - Episode %s',
             episode.season.show.name, episode.season.name, episode.number)
-    else:
-        log.warn('no files found')
