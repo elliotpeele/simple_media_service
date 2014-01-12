@@ -24,7 +24,7 @@ class SMSClient(object):
     # Broadchurch.1x08.HDTVxx264-FoV.mp4
     # Broadchurch.S01E06.PROPER.HDTV.x264-TLA.mp4
     # Castle.2009.S06E08.HDTV.x264-LOL.mp4
-    FILE_RE = re.compile('(.*)\.(S(\d+)E(\d+)|(\d+)x(\d+))\..*')
+    FILE_RE = re.compile('(.*)\.([Ss](\d+)[Ee](\d+)|(\d+)x(\d+))\..*')
 
     def __init__(self, uri):
         self.api = prism_rest_client.open(uri)
@@ -33,7 +33,7 @@ class SMSClient(object):
     def addfile(self, path):
         m = self.FILE_RE.match(os.path.basename(path))
         if not m:
-            log.info('skipping %s', path)
+            log.warn('skipping %s', path)
             return
 
         groups = m.groups()
@@ -89,3 +89,10 @@ class SMSClient(object):
             sha.update(f.read(part))
             pos = f.tell()
         return sha.hexdigest()
+
+    def addtree(self, root):
+        for dirpath, dirnames, filenames in os.walk(root):
+            for fname in filenames:
+                if not fname.endswith('.mp4'):
+                    continue
+                yield self.addfile(os.path.join(root, dirpath, fname))

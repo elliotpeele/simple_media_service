@@ -40,5 +40,6 @@ setup(name='simple_media_service',
       [console_scripts]
       initialize_simple_media_service_db = simple_media_service.scripts.initializedb:main
       add_video_file = simple_media_service.scripts.add_file:main
+      add_video_tree = simple_media_service.scripts.add_tree:main
       """,
       )
