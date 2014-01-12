@@ -56,6 +56,13 @@ class SeasonsView(APIView):
     @view_requires('season')
     @view_provides('season')
     def _post(self):
+        q = db.query(Season).filter_by(
+            name=self.request.input_model.name,
+            show_id=self.match.show_id,
+        )
+        if q.count():
+            return q.first()
+
         season = Season(
             self.request.input_model.name,
             self.request.input_model.year,

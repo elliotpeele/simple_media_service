@@ -54,6 +54,10 @@ class ShowsView(APIView):
     @view_requires('show')
     @view_provides('show')
     def _post(self):
+        q = db.query(Show).filter_by(name=self.request.input_model.name)
+        if q.count():
+            return q.first()
+
         show = Show(self.request.input_model.name)
         db.add(show)
         db.flush()
