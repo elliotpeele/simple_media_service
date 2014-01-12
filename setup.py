@@ -39,5 +39,6 @@ setup(name='simple_media_service',
       main = simple_media_service:main
       [console_scripts]
       initialize_simple_media_service_db = simple_media_service.scripts.initializedb:main
+      add_video_file = simple_media_service.scripts.add_file:main
       """,
       )

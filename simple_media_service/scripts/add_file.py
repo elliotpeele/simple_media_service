@@ -25,16 +25,20 @@ log.setLevel(logging.DEBUG)
 
 def usage(argv):
     cmd = os.path.basename(argv[0])
-    print 'usage: %s <config_uri> <file_path>' % cmd
+    print 'usage: %s <config_uri> <service_uri> <file_path>' % cmd
     sys.exit(1)
 
 
 def main(argv=sys.argv):
-    if len(argv) != 3:
+    if len(argv) != 4:
         usage(argv)
     config_uri = argv[1]
-    file_path = argv[2]
+    service_uri = argv[2]
+    file_path = argv[3]
     setup_logging(config_uri)
 
-    client = SMSClient(config_uri)
+    client = SMSClient(service_uri)
     episode = client.addfile(file_path)
+
+    log.info('added episide %s - Season %s - Episode %s',
+        episode.season.show.name, episode.season.name, episode.number)
