@@ -18,7 +18,6 @@ import logging
 log = logging.getLogger('simple_media_service.client')
 
 import prism_rest_client
-from prism_rest_client.lib.util import AttrDict
 
 class SMSClient(object):
     # Broadchurch.1x08.HDTVxx264-FoV.mp4
